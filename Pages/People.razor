@@ -1,0 +1,57 @@
+﻿@page "/people"
+
+@using StarWarsBlazor.Data
+@using System.Net.Http
+@using Newtonsoft.Json
+@inject HttpClient Http
+
+<div class="container">
+    <h3>People</h3>
+    @if (rootObject.results != null)
+    {
+        foreach (var p in rootObject.results)
+        {
+            <p>@p.name</p>
+        }
+    }
+    @*<p>@people.ToString()</p>*@
+    <button @onclick="ToggleContent">Toggle raw json</button>
+    <p>@content</p>
+</div>
+
+@code {
+    public RootObject rootObject = new RootObject();
+    private string content = "";
+    private string contentData = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetAsync("https://swapi.co/api/people/");
+        var stream = await response.Content.ReadAsStringAsync();
+        rootObject = JsonConvert.DeserializeObject<RootObject>(stream);
+    }
+
+    private async Task ToggleContent()
+    {
+        if (contentData == "")
+        {
+            contentData = await Http.GetStringAsync("https://swapi.co/api/people/");
+            content = contentData;
+            return;
+        }
+
+        if (content == "")
+        {
+            content = contentData;
+        }
+        else
+        {
+            content = "";
+        }
+    }
+
+    public class RootObject
+    {
+        public List<Person> results { get; set; }
+    }
+}
