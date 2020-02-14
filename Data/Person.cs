@@ -19,5 +19,6 @@ namespace StarWarsBlazor.Data
         public List<string> species { get; set; }
         public string eye_color { get; set; }
         public string mass { get; set; }
+        public string img_url { get; set; }
     }
 }

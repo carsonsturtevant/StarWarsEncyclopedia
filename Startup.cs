@@ -28,7 +28,6 @@ namespace StarWarsBlazor
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<System.Net.Http.HttpClient>();
         }
 
