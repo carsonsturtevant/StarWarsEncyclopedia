@@ -5,34 +5,55 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Hosting;
+using System;
+using System.IO;
 
 namespace StarWarsBlazor.Services
 {
     public class AppDataService
     {
         private readonly HttpClient _httpClient;
-        private List<Person> people;
+        private List<Person> people = new List<Person>();
+        private string peopleJson;
 
-        public AppDataService(HttpClient httpClient) {
+        public AppDataService(HttpClient httpClient, IHostingEnvironment env) {
             _httpClient = httpClient;
-            _ = getAllPeople();
         }
 
-        public List<Person> getPeople()
+        public async Task<List<Person>> GetPeople()
         {
+            if (people.Count == 0)
+            {
+                await GetAllPeople();
+            }
             return people;
         }
 
-        private async Task getAllPeople()
+        public string GetPeopleJson()
         {
-            var next = "https://swapi.co/api/people/";
-            while (next != null)
+            return peopleJson;
+        }
+
+        private async Task GetAllPeople()
+        {
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
             {
-                var response = await _httpClient.GetAsync(next);
-                var stream = await response.Content.ReadAsStringAsync();
-                var rootObject = JsonConvert.DeserializeObject<RootPeopleObject>(stream);
-                people.AddRange(rootObject.results);
-                next = rootObject.next;
+                peopleJson = File.ReadAllText("./Data/Json/all_people.json");
+                people = JsonConvert.DeserializeObject<List<Person>>(peopleJson);
+            }
+            else
+            {
+                var next = "https://swapi.co/api/people/";
+                while (next != null)
+                {
+                    var response = await _httpClient.GetAsync(next);
+                    var stream = await response.Content.ReadAsStringAsync();
+                    peopleJson += stream;
+                    var rootObject = JsonConvert.DeserializeObject<RootPeopleObject>(stream);
+                    people.AddRange(rootObject.results);
+                    next = rootObject.next;
+                }
             }
             people = people.OrderBy(x => x.name).ToList();
         }
