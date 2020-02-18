@@ -16,19 +16,23 @@
         }
         else
         {
-            <label for="exampleFormControlTextarea1">Example textarea</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <div class="p-2 w-25">
+                <input class="form-control" id="filter" type="text" @bind="filter" placeholder="Search...">
+            </div>
             <div class="card-columns">
                 @foreach (var p in people)
                 {
-                    <div class="card border-primary">
-                        <img class="card-img-top" src="@p.img_url" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">@p.name</h5>
-                            <p class="card-text"></p>
-                            <a href="#" class="btn btn-primary">Details</a>
+                    if (filter == "" || p.name.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <div class="card border-primary">
+                            <img class="card-img-top" src="@p.img_url" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">@p.name</h5>
+                                <p class="card-text"></p>
+                                <a href="#" class="btn btn-primary">Details</a>
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
             </div>
             <button @onclick="ToggleContent">Toggle raw json</button>
@@ -39,7 +43,9 @@
 @code {
     public List<Person> people = new List<Person>();
     public List<Species> species = new List<Species>();
+    public string filter = "";
     private string peopleJson = "";
+    
 
     protected override async Task OnInitializedAsync()
     {

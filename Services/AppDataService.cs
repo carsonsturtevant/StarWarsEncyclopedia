@@ -1,11 +1,9 @@
 ﻿using StarWarsBlazor.Data;
-using StarWarsBlazor.Pages;
 using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.AspNetCore.Hosting;
 using System;
 using System.IO;
 
@@ -17,7 +15,7 @@ namespace StarWarsBlazor.Services
         private List<Person> people = new List<Person>();
         private string peopleJson;
 
-        public AppDataService(HttpClient httpClient, IHostingEnvironment env) {
+        public AppDataService(HttpClient httpClient) {
             _httpClient = httpClient;
         }
 
