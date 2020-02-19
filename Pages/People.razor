@@ -3,49 +3,50 @@
 @using StarWarsBlazor.Data
 @using System.Net.Http
 @using Newtonsoft.Json
+@using Microsoft.AspNetCore.Blazor
 @inject HttpClient Http
 @inject StarWarsBlazor.Services.AppDataService AppDataService
 
-    <div class="container">
-        <h3>People</h3>
-        @if (people.Count == 0)
-        {
-            <div class="w-100 my-3">
-                <div class="loader mx-auto"></div>
-            </div>
-        }
-        else
-        {
-            <div class="p-2 w-25">
-                <input class="form-control" id="filter" type="text" @bind="filter" placeholder="Search...">
-            </div>
-            <div class="card-columns">
-                @foreach (var p in people)
+<div class="container">
+    <h3>People</h3>
+    @if (people.Count == 0)
+    {
+        <div class="w-100 my-3">
+            <div class="loader mx-auto"></div>
+        </div>
+    }
+    else
+    {
+        <div class="p-2">
+            <input class="form-control" id="filter" type="text" @bind-value="filter" @bind-value:event="oninput" placeholder="Search...">
+        </div>
+        <div class="card-columns">
+            @foreach (var p in people)
+            {
+                if (filter == "" || p.name.Contains(filter, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (filter == "" || p.name.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                    {
-                        <div class="card border-primary">
-                            <img class="card-img-top" src="@p.img_url" alt="Card image cap">
-                            <div class="card-body">
-                                <h5 class="card-title">@p.name</h5>
-                                <p class="card-text"></p>
-                                <a href="#" class="btn btn-primary">Details</a>
-                            </div>
+                    <div class="card border-primary">
+                        <img class="card-img-top" src="@p.img_url" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">@p.name</h5>
+                            <p class="card-text"></p>
+                            <a href="#" class="btn btn-primary">Details</a>
                         </div>
-                    }
+                    </div>
                 }
-            </div>
-            <button @onclick="ToggleContent">Toggle raw json</button>
-            <p>@peopleJson</p>
-        }
-    </div>
+            }
+        </div>
+        <button @onclick="ToggleContent">Toggle raw json</button>
+        <p>@peopleJson</p>
+    }
+</div>
 
 @code {
     public List<Person> people = new List<Person>();
     public List<Species> species = new List<Species>();
     public string filter = "";
     private string peopleJson = "";
-    
+
 
     protected override async Task OnInitializedAsync()
     {
