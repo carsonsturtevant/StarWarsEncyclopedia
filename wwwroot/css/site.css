@@ -201,3 +201,8 @@ app {
         transform: rotate(360deg);
     }
 }
+
+.sw-yellow {
+    color: black !important;
+    background-color: #FFE81F !important;
+}

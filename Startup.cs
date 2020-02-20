@@ -23,7 +23,8 @@ namespace StarWarsBlazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<System.Net.Http.HttpClient>();
-            services.AddSingleton<AppDataService>();
+            services.AddSingleton<PeopleService>();
+            services.AddSingleton<FilmService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

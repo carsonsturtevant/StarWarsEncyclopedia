@@ -1,0 +1,82 @@
+﻿@page "/films"
+
+@using StarWarsBlazor.Data
+@using StarWarsBlazor.Data.RootObjects
+@using System.Net.Http
+@using Newtonsoft.Json
+@inject HttpClient Http
+@inject StarWarsBlazor.Services.FilmService FilmService
+
+<div class="container">
+    <h3>Films</h3>
+    @if (films.Count == 0)
+    {
+        <div class="w-100 my-3">
+            <div class="loader mx-auto"></div>
+        </div>
+    }
+    else
+    {
+        <div class="p-2">
+            <input class="form-control" id="filter" type="text" @bind-value="filter" @bind-value:event="oninput" placeholder="Search...">
+        </div>
+        <div class="card-columns">
+            @foreach (var f in films)
+            {
+                if (filter == "" || f.title.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                {
+                    <div class="card border-primary">
+                        <img class="card-img-top" src="@f.img_url" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">@f.title</h5>
+                            <p class="card-text"></p>
+                            <a href="#" class="btn btn-primary">Details</a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <button @onclick="ToggleContent">Toggle raw json</button>
+        <p>@filmsJson</p>
+    }
+</div>
+
+@code {
+    public List<Film> films = new List<Film>();
+    public string filter = "";
+    private string filmsJson = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        films = await FilmService.GetFilms();
+        // await getSpecies();
+        // setAllSpecies();
+        await setAllImages();
+    }
+
+    private async Task setAllImages()
+    {
+        var url = "https://localhost:44334/api/filmimage";
+        var response = await Http.GetAsync(url);
+        var stream = await response.Content.ReadAsStringAsync();
+        var rootObject = JsonConvert.DeserializeObject<List<RootImageObject>>(stream);
+
+        foreach (var film in films)
+        {
+            film.img_url = rootObject.Find(x => x.SwapiUrl == film.url)?.ImageUrl;
+        }
+    }
+
+    private void ToggleContent()
+    {
+        if (filmsJson == "")
+        {
+            filmsJson = FilmService.GetFilmsJson();
+        }
+        else
+        {
+            filmsJson = "";
+        }
+    }
+}
