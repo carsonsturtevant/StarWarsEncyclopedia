@@ -8,7 +8,7 @@
 @inject StarWarsBlazor.Services.PeopleService PeopleService
 
     <div class="container">
-        <h3>People</h3>
+        @*<h3>People</h3>*@
         @if (people.Count == 0)
         {
             <div class="w-100 my-3">
@@ -17,26 +17,43 @@
         }
         else
         {
-            <div class="p-2">
-                <input class="form-control" id="filter" type="text" @bind-value="filter" @bind-value:event="oninput" placeholder="Search...">
+            <div class="p-3">
+                <input class="form-control bg-dark" id="filter" type="text" @bind-value="filter" @bind-value:event="oninput" placeholder="Search...">
             </div>
-            <div class="card-columns">
+            <div class="row">
                 @foreach (var p in people)
                 {
                     if (filter == "" || p.name.Contains(filter, StringComparison.OrdinalIgnoreCase))
                     {
-                        <a type="button" class="card border-primary text-white bg-dark" style="max-width: 18rem;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">
-                            <img class="card-img-top" style="max-height: 20rem;" src="@p.img_url" alt="Card image cap">
-                            <div class="card-body">
-                                <h5 class="card-title">@p.name</h5>
-                                <p class="card-text"></p>
-                            </div>
-                        </a>
-                    }
-                }
+                        @*<a type="button" class="card border-primary text-white bg-dark" style="max-width: 15rem;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">*@
+                            <a class="card m-1 bg-dark-opacity" style="max-width: 372px; height: 157px;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">
+                                <div class="row no-gutters">
+                                    <div class="col-4">
+                                        <img src="@p.img_url" class="card-img" style="height:155px;" alt="...">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@p.name</h5>
+                                            @*<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        @*</a>*@
+                            @*<a type="button" class="card border-primary text-white bg-dark" style="max-width: 15rem;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">
+                        <div class="card-body">
+
+
+                            <h5 class="card-title"><img class="img-thumbnail" style="max-height: 20rem;" src="@p.img_url" alt="Card image cap">@p.name</h5>
+                            <p class="card-text"></p>
+                        </div>
+                    </a>*@
+                            }
+                            }
                     </div>
-            <button @onclick="ToggleContent">Toggle raw json</button>
-            <p>@peopleJson</p>
+            @*<button @onclick="ToggleContent">Toggle raw json</button>
+            <p>@peopleJson</p>*@
 
             @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 Launch demo modal
@@ -44,7 +61,7 @@
 
             <div class="modal fade" id="personModal" tabindex="-1" role="dialog" aria-labelledby="personModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <div class="modal-content">
+                    <div class="modal-content bg-dark">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">@currentPerson.name</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
