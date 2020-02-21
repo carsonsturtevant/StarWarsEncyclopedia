@@ -903,7 +903,7 @@
     "url": "https://swapi.co/api/people/38/"
   },
   {
-    "name": "Ric Olié",
+    "name": "Ric Olie",
     "height": "183",
     "mass": "unknown",
     "hair_color": "brown",
@@ -1387,7 +1387,7 @@
     "url": "https://swapi.co/api/people/60/"
   },
   {
-    "name": "Cordé",
+    "name": "Corde",
     "height": "157",
     "mass": "unknown",
     "hair_color": "brown",
@@ -1499,7 +1499,7 @@
     "url": "https://swapi.co/api/people/65/"
   },
   {
-    "name": "Dormé",
+    "name": "Dorme",
     "height": "165",
     "mass": "unknown",
     "hair_color": "brown",
@@ -2037,7 +2037,7 @@
     "url": "https://swapi.co/api/people/88/"
   },
   {
-    "name": "Padmé Amidala",
+    "name": "Padme Amidala",
     "height": "165",
     "mass": "45",
     "hair_color": "brown",

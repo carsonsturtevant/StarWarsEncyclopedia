@@ -214,7 +214,46 @@ app {
     background-color: rgba(0, 0, 0, .5);
     /*background-color: rgba(41, 43, 44, .85);*/
 }
-    .bg-dark-opacity:hover {
-        background-color: rgba(0, 0, 0, 1.0);
-        border-color: #FFE81F;
-    }
+
+.bg-dark-opacity:hover {
+    background-color: rgba(0, 0, 0, 1.0);
+    border-color: #FFE81F;
+}
+
+@font-face {
+    font-family: 'star_jediregular';
+    src: url('/fonts/starjedi-webfont.woff2') format('woff2'), url('/fonts/starjedi-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'anakinmonoregular';
+    src: url('/fonts/anakinmono-webfont.woff2') format('woff2'), url('/fonts/anakinmono-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'star_jedi_hollowregular';
+    src: url('/fonts/starjhol-webfont.woff2') format('woff2'), url('/fonts/starjhol-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.sw-font {
+    font-family: "star_jediregular", Arial, sans-serif;
+}
+
+.rubik-font {
+    font-family: "Rubik", Arial, sans-serif;
+}
+
+/*.sw-hollow-font {
+    font-family: "star_jedi_hollowregular", Arial, sans-serif;
+}
+
+
+.anakin-font {
+    font-family: "anakinmonoregular", Arial, sans-serif;
+}*/
