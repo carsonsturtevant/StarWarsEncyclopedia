@@ -6,9 +6,9 @@
 @using Newtonsoft.Json
 @inject HttpClient Http
 @inject StarWarsBlazor.Services.PeopleService PeopleService
+@inject StarWarsBlazor.Services.SpeciesService SpeciesService
 
     <div class="container">
-        @*<h3>People</h3>*@
         @if (people.Count == 0)
         {
             <div class="w-100 my-3">
@@ -20,60 +20,49 @@
             <div class="p-3">
                 <input class="form-control bg-dark" id="filter" type="text" @bind-value="filter" @bind-value:event="oninput" placeholder="Search...">
             </div>
+
             <div class="row">
                 @foreach (var p in people)
                 {
                     if (filter == "" || p.name.Contains(filter, StringComparison.OrdinalIgnoreCase))
                     {
-                        @*<a type="button" class="card border-primary text-white bg-dark" style="max-width: 15rem;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">*@
-                            <a class="card m-1 bg-dark-opacity" style="max-width: 372px; height: 157px;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">
-                                <div class="row no-gutters">
-                                    <div class="col-4">
-                                        <img src="@p.img_url" class="card-img" style="height:155px;" alt="...">
-                                    </div>
-                                    <div class="col-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title">@p.name</h5>
-                                            @*<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>*@
-                                        </div>
+                        <a class="card m-1 bg-dark-opacity" style="max-width: 372px; height: 157px;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">
+                            <div class="row no-gutters">
+                                <div class="col-4">
+                                    <img src="@p.img_url" class="card-img" style="height:155px;">
+                                </div>
+                                <div class="col-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@p.name</h5>
                                     </div>
                                 </div>
-                            </a>
-                        @*</a>*@
-                            @*<a type="button" class="card border-primary text-white bg-dark" style="max-width: 15rem;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">
-                        <div class="card-body">
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
 
-
-                            <h5 class="card-title"><img class="img-thumbnail" style="max-height: 20rem;" src="@p.img_url" alt="Card image cap">@p.name</h5>
-                            <p class="card-text"></p>
-                        </div>
-                    </a>*@
-                            }
-                            }
-                    </div>
             @*<button @onclick="ToggleContent">Toggle raw json</button>
             <p>@peopleJson</p>*@
-
-            @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                Launch demo modal
-            </button>*@
 
             <div class="modal fade" id="personModal" tabindex="-1" role="dialog" aria-labelledby="personModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content bg-dark">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">@currentPerson.name</h5>
+                            <img src="@currentPerson.img_url" style="height:50px" />
+                            <h5 class="modal-title ml-2" id="exampleModalLabel">@currentPerson.name</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true" style="color: white">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            ...
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            Species: @currentPerson.species?.FirstOrDefault()  <br />
+                            Birth year: @currentPerson.birth_year <br />
+                            Gender: @currentPerson.gender <br />
+                            Height: @currentPerson.height <br />
+                            Hair color: @currentPerson.hair_color <br />
+                            Skin color: @currentPerson.skin_color <br />
+
                         </div>
                     </div>
                 </div>
@@ -83,6 +72,7 @@
 
 @code {
     public List<Person> people = new List<Person>();
+    public List<Species> species = new List<Species>();
     public Person currentPerson = new Person();
     // public List<Species> species = new List<Species>();
     public string filter = "";
@@ -92,6 +82,7 @@
     protected override async Task OnInitializedAsync()
     {
         people = await PeopleService.GetPeople();
+        species = await SpeciesService.GetSpecies();
         // await getSpecies();
         // setAllSpecies();
         await setAllImages();
@@ -113,6 +104,7 @@
     private void SetCurrentPerson(string url)
     {
         currentPerson = PeopleService.GetPerson(url);
+        currentPerson.species = new List<string>() { SpeciesService.GetSpecies(currentPerson.species.FirstOrDefault())?.name };
     }
 
     //private async Task getSpecies()
