@@ -7,42 +7,67 @@
 @inject HttpClient Http
 @inject StarWarsBlazor.Services.FilmService FilmService
 
-<div class="container">
-    <h3>Films</h3>
-    @if (films.Count == 0)
-    {
-        <div class="w-100 my-3">
-            <div class="loader mx-auto"></div>
-        </div>
-    }
-    else
-    {
-        <div class="p-2">
-            <input class="form-control" id="filter" type="text" @bind-value="filter" @bind-value:event="oninput" placeholder="Search...">
-        </div>
-        <div class="card-columns">
-            @foreach (var f in films)
-            {
-                if (filter == "" || f.title.Contains(filter, StringComparison.OrdinalIgnoreCase))
+    <div class="container">
+        @if (films.Count == 0)
+        {
+            <div class="w-100 my-3">
+                <div class="loader mx-auto"></div>
+            </div>
+        }
+        else
+        {
+            <div class="p-3">
+                <input class="form-control bg-dark" id="filter" type="text" @bind-value="filter" @bind-value:event="oninput" placeholder="Search...">
+            </div>
+
+            <div class="row">
+                @foreach (var f in films)
                 {
-                    <div class="card border-primary">
-                        <img class="card-img-top" src="@f.img_url" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">@f.title</h5>
-                            <p class="card-text"></p>
-                            <a href="#" class="btn btn-primary">Details</a>
+                    if (filter == "" || f.title.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <a class="card my-card m-1 bg-dark-opacity" data-toggle="modal" data-target="#filmModal" @onclick="@(() => SetCurrentFilm(f.url))">
+                            <div class="row no-gutters">
+                                <div class="col-4">
+                                    <img class="card-img my-card-img" src="@f.img_url">
+                                </div>
+                                <div class="col-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@f.title</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+
+            @*<button @onclick="ToggleContent">Toggle raw json</button>
+            <p>@filmsJson</p>*@
+
+            <div class="modal fade" id="filmModal" tabindex="-1" role="dialog" aria-labelledby="filmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                            <img src="@currentFilm.img_url" style="height:50px" />
+                            <h5 class="modal-title ml-2" id="exampleModalLabel">@currentFilm.title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" style="color: white">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Director: @currentFilm.director <br />
+                            Producer: @currentFilm.producer <br />
+                            Opening crawl:<br /> @currentFilm.opening_crawl <br />
                         </div>
                     </div>
-                }
-            }
-        </div>
-        <button @onclick="ToggleContent">Toggle raw json</button>
-        <p>@filmsJson</p>
-    }
-</div>
+                </div>
+            </div>
+        }
+    </div>
 
 @code {
     public List<Film> films = new List<Film>();
+    public Film currentFilm = new Film();
     public string filter = "";
     private string filmsJson = "";
 
@@ -50,8 +75,6 @@
     protected override async Task OnInitializedAsync()
     {
         films = await FilmService.GetFilms();
-        // await getSpecies();
-        // setAllSpecies();
         await setAllImages();
     }
 
@@ -66,6 +89,11 @@
         {
             film.img_url = rootObject.Find(x => x.SwapiUrl == film.url)?.ImageUrl;
         }
+    }
+
+    private void SetCurrentFilm(string url)
+    {
+        currentFilm = FilmService.GetFilm(url);
     }
 
     private void ToggleContent()

@@ -33,6 +33,10 @@ namespace StarWarsBlazor.Services
         {
             return filmsJson;
         }
+        public Film GetFilm(string url)
+        {
+            return films.Find(x => x.url == url);
+        }
 
         private async Task GetAllFilms()
         {

@@ -26,10 +26,10 @@
                 {
                     if (filter == "" || p.name.Contains(filter, StringComparison.OrdinalIgnoreCase))
                     {
-                        <a class="card m-1 bg-dark-opacity" style="max-width: 372px; height: 157px;" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">
+                        <a class="card my-card m-1 bg-dark-opacity" data-toggle="modal" data-target="#personModal" @onclick="@(() => SetCurrentPerson(p.url))">
                             <div class="row no-gutters">
                                 <div class="col-4">
-                                    <img src="@p.img_url" class="card-img" style="height:155px;">
+                                    <img src="@p.img_url" class="card-img my-card-img">
                                 </div>
                                 <div class="col-8">
                                     <div class="card-body">
@@ -74,7 +74,6 @@
     public List<Person> people = new List<Person>();
     public List<Species> species = new List<Species>();
     public Person currentPerson = new Person();
-    // public List<Species> species = new List<Species>();
     public string filter = "";
     private string peopleJson = "";
 
@@ -83,8 +82,6 @@
     {
         people = await PeopleService.GetPeople();
         species = await SpeciesService.GetSpecies();
-        // await getSpecies();
-        // setAllSpecies();
         await setAllImages();
     }
 
@@ -106,34 +103,6 @@
         currentPerson = PeopleService.GetPerson(url);
         currentPerson.species = new List<string>() { SpeciesService.GetSpecies(currentPerson.species.FirstOrDefault())?.name };
     }
-
-    //private async Task getSpecies()
-    //{
-    //    var next = "https://swapi.co/api/species/";
-    //    while (next != null)
-    //    {
-    //        var response = await Http.GetAsync(next);
-    //        var stream = await response.Content.ReadAsStringAsync();
-    //        var rootObject = JsonConvert.DeserializeObject<RootSwapiObject<Species>>(stream);
-    //        species.AddRange(rootObject.results);
-    //        next = rootObject.next;
-    //    }
-    //}
-
-    //private void setAllSpecies()
-    //{
-    //    foreach (var person in people)
-    //    {
-    //        if (person.species.Count > 0)
-    //        {
-    //            person.species[0] = species.Where(x => x.url == person.species[0]).First().name;
-    //        }
-    //        else
-    //        {
-    //            person.species.Add("Unknown");
-    //        }
-    //    }
-    //}
 
     private void ToggleContent()
     {
